@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: block;" id="main" class="container-fluid">
+    <h1 class="text-center font-italic">
+        My Wedding List
+    </h1>
+    <p class="text-sm-left font-weight-light">
+        Create your perfect wedding list right here. Once you are done adding items to your list simply click on the "store list" button.
+    </p>
+    <form id="/" action="" method="post">{% csrf_token %}
+        <button type="submit" class="btn btn-success">Store list</button>    
+    <br><br>
+    <span style="display: none;" id="dummy_row_count">{{ max_count }}</span>
+    <table class="table table-striped table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>Row #</th>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Cost</th>
+                <th>Item Code</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody id="rph">
+            {{ my_list|safe }}
+            <!-- row place holder for new item -->
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" onclick="add_row();">Add Product</button>
+    </form>
+</div>
+<div style="display: none;" id="product_add" class="container-fluid">
+    <h3 class="font-italic">Add a product</h3>
+    <select id="products" class="form-control form-control-lg">
+    </select>
+    <br>
+    <p class="font-italic">Quantity</p>
+    <input id="quantity" type="number" value="1" class="form-control">
+    <br>
+    <button type="button" class="btn btn-success" onclick="add_item();">Add item</button>
+    <button type="button" class="btn btn-primary" onclick="back();">Back</button>
+</div>
+<script>
+    var products = [
+      {
+        "id": 1,
+        "name": "Tea pot",
+        "brand": "Le Creuset",
+        "price": "47.00GBP",
+        "in_stock_quantity": 50
+      },
+      {
+        "id": 2,
+        "name": "Cast Iron Oval Casserole - 25cm; Volcanic",
+        "brand": "Le Creuset",
+        "price": "210.00GBP",
+        "in_stock_quantity": 27
+      },
+      {
+        "id": 4,
+        "name": "Gordon Ramsay Maze 12 Piece Set, White",
+        "brand": "ROYAL DOULTON",
+        "price": "85.00GBP",
+        "in_stock_quantity": 2
+      },
+      {
+        "id": 5,
+        "name": "9-speed Hand Mixer; Almond Cream",
+        "brand": "KITCHENAID",
+        "price": "99.99GBP",
+        "in_stock_quantity": 9
+      },
+      {
+        "id": 6,
+        "name": "Mini Stand Mixer; Empire Red",
+        "brand": "KITCHENAID",
+        "price": "399.00GBP",
+        "in_stock_quantity": 2
+      },
+      {
+        "id": 7,
+        "name": "50's Style Stand Mixer, Full-Colour White",
+        "brand": "SMEG SMALL APPLIANCES",
+        "price": "449.00GBP",
+        "in_stock_quantity": 0
+      },
+      {
+        "id": 8,
+        "name": "50's Style Stand Mixer, Black",
+        "brand": "SMEG SMALL APPLIANCES",
+        "price": "449.99GBP",
+        "in_stock_quantity": 1
+      },
+      {
+        "id": 9,
+        "name": "Polka Bedding Set, King, Silver",
+        "brand": "BEAU LIVING",
+        "price": "105.00GBP",
+        "in_stock_quantity": 5
+      },
+      {
+        "id": 10,
+        "name": "Paignton Bedding Set, King, White",
+        "brand": "BEAU LIVING",
+        "price": "105.00GBP",
+        "in_stock_quantity": 0
+      },
+      {
+        "id": 11,
+        "name": "Original Kettle E-5710 Charcoal Barbecue - 57cm; Black",
+        "brand": "WEBER GRILLS",
+        "price": "199.99GBP",
+        "in_stock_quantity": 1
+      },
+      {
+        "id": 12,
+        "name": "Compact Charcoal Grill, 57 cm",
+        "brand": "WEBER GRILLS",
+        "price": "139.99GBP",
+        "in_stock_quantity": 29
+      },
+      {
+        "id": 13,
+        "name": "Falcon T2 Square Parasol, 2.7m, Taupe",
+        "brand": "GARDENSTORE",
+        "price": "344.99GBP",
+        "in_stock_quantity": 5
+      },
+      {
+        "id": 14,
+        "name": "Riva Round Parasol - 3m; Anthracite",
+        "brand": "GARDENSTORE",
+        "price": "79.99GBP",
+        "in_stock_quantity": 8
+      },
+      {
+        "id": 15,
+        "name": "Glow Challenger T2 Square Parasol - 3m, Taupe",
+        "brand": "GARDENSTORE",
+        "price": "619.99GBP",
+        "in_stock_quantity": 30
+      },
+      {
+        "id": 16,
+        "name": "Ceramic Bottle Lamp, Small",
+        "brand": "THE WHITE COMPANY",
+        "price": "95.00GBP",
+        "in_stock_quantity": 0
+      },
+      {
+        "id": 17,
+        "name": "Gold Sitting Mouse Lamp",
+        "brand": "GRAHAM & GREEN",
+        "price": "73.00GBP",
+        "in_stock_quantity": 3
+      },
+      {
+        "id": 18,
+        "name": "Usha Mango Wood Lamp Base",
+        "brand": "NKUKU",
+        "price": "49.95GBP",
+        "in_stock_quantity": 12
+      },
+      {
+        "id": 19,
+        "name": "Sea Green Honeycomb Glass Lamp",
+        "brand": "GRAHAM & GREEN",
+        "price": "95.00GBP",
+        "in_stock_quantity": 4
+      },
+      {
+        "id": 20,
+        "name": "Faux Tortoiseshell Lamp",
+        "brand": "OKA",
+        "price": "175.00GBP",
+        "in_stock_quantity": 0
+      },
+      {
+        "id": 21,
+        "name": "2 Person Blue Tweed Hamper",
+        "brand": "WILLOW STORE",
+        "price": "85.50GBP",
+        "in_stock_quantity": 2
+      }
+    ];
+    function add_row() {
+        var options = "";
+        for (row in products) {
+            if (products[row]["in_stock_quantity"] > 0) {
+                options = options + '<option value="'+products[row]["id"]+'">'+products[row]["name"]+" ("+products[row]["brand"]+") - "+products[row]["price"]+"</option>"   
+            }
+        }
+        document.getElementById("products").innerHTML = options;
+        document.getElementById("main").style.display = "none";
+        document.getElementById("product_add").style.display = "block";
+    }
+    function back() {
+        document.getElementById("main").style.display = "block";
+        document.getElementById("product_add").style.display = "none";
+    }
+    function add_item() {
+        var row_number = document.getElementById("dummy_row_count").innerHTML;
+        var item = document.getElementById("products");
+        var quantity = parseInt(document.getElementById("quantity").value);
+        var quantity = quantity.toFixed(2);
+        var row_contents = "";
+        for (row in products) {
+            if (products[row]["id"] == item.value) {
+                row_contents = products[row];
+            }
+        }
+        if (quantity > row_contents["in_stock_quantity"]) {
+            quantity = row_contents["in_stock_quantity"];
+        }
+        var cost = parseFloat(row_contents["price"].replace("GBP", "")) * quantity;
+        var cost = cost.toFixed(2);
+        var row = document.getElementById("rph").innerHTML;
+            row = row + '<tr id="'+row_number+'">'; // new row start
+            row = row + '<td>'+row_number+'</td>'; // product
+            row = row + '<td>'+row_contents["name"]+'</td><input id="product_name_'+row_number+'" style="display: none;" name="product_name" value="'+row_contents["name"]+'">'; // product
+            row = row + '<td>'+row_contents["brand"]+'</td><input id="product_brand_'+row_number+'" style="display: none;" name="product_brand" value="'+row_contents["brand"]+'">'; // brand
+            row = row + '<td>'+row_contents["price"]+'</td><input id="product_price_'+row_number+'" style="display: none;" name="product_price" value="'+row_contents["price"]+'">'; // price
+            row = row + '<td>'+quantity+'</td><input id="product_qty_ordered_'+row_number+'" style="display: none;" name="product_qty_ordered" value="'+quantity+'">'; // quantity
+            row = row + '<td>'+cost+'GBP</td>'; // cost
+            row = row + '<td>'+row_contents["id"]+'</td><input id="product_id_'+row_number+'" style="display: none;" name="product_id" value="'+row_contents["id"]+'">'; // id
+            row = row + '<td class="btn" onclick="remove_row('+row_number+');">❌</td>'; // remove
+        document.getElementById("dummy_row_count").innerHTML = parseInt(row_number) + 1;
+        document.getElementById("rph").innerHTML = row;
+        document.getElementById("main").style.display = "block";
+        document.getElementById("product_add").style.display = "none";
+        
+    }
+    function remove_row(row_number) {
+        document.getElementById(row_number).innerHTML = "";
+        var element = document.getElementById("product_name_"+row_number);
+        element.parentNode.removeChild(element);
+        var element = document.getElementById("product_brand_"+row_number);
+        element.parentNode.removeChild(element);
+        var element = document.getElementById("product_price_"+row_number);
+        element.parentNode.removeChild(element);
+        var element = document.getElementById("product_qty_ordered_"+row_number);
+        element.parentNode.removeChild(element);
+        var element = document.getElementById("product_id_"+row_number);
+        element.parentNode.removeChild(element);
+    }
+</script>
+{% endblock %}	
