@@ -1,7 +1,6 @@
 # Prince-Bride: Wedding List Webapp
 
-The files and contents of the files have been created for express purpose of answering the tasks found at the link below:
-https://github.com/prezola/technical-challenge
+The files and contents of the files have been created for express purpose of answering the tasks found at the link here https://github.com/prezola/technical-challenge
 
 This is a development project
 
@@ -19,3 +18,9 @@ To run this project as a development package:
 
 * To access the admin panel, run the command ```python manage.py createsuperuser```
 * For database syncing please read the guide here https://docs.djangoproject.com/en/3.0/topics/migrations/
+
+# Prince-Bride: Improvements
+
+These improvements would make the webapp better
+1) NGINX to handle multiple concurrent requests
+2) User authentication
