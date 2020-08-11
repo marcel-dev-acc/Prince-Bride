@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+  <h1>Payment Page</h1>
+  <p>Please confirm your purchase of the following product</p>
+  <form action="/payment-success/" method="post">{% csrf_token %}
+  <input style="display: none;" type="number" name="user_id" value="1">
+    <input style="display: none;" type="number" name="product_id" value="{{ product_id }}">
+    <input style="display: none;" type="number" name="quantity" value="{{ quantity }}">
+    <p>Name: <b>{{ product_name }}</b></p>
+    <p>Brand: <b>{{ product_brand }}</b></p>
+    <p>Price: <b>{{ price }}</b></p>
+    <p>Quantity: <b>{{ quantity }}</b></p>
+    <p>Total Cost: <b>{{ cost }}</b></p>
+    <br><br>
+    <label>Card Number</label><br>
+    <input type="text" placeholder="1234 5678 9101 1213" name="card" value=""><br><br>
+    <label>Expiry Date</label><br>
+    <input type="text" placeholder="01/22" name="expiry_date" value=""><br><br>
+    <label>CVV</label><br>
+    <input type="number" placeholder="000" name="cvv" value=""><br><br>
+    <button type="submit" class="btn btn-success">Pay</button>
+  </form>
+</div>
+
+{% endblock %}	

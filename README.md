@@ -18,9 +18,12 @@ To run this project as a development package:
 
 * To access the admin panel, run the command ```python manage.py createsuperuser```
 * For database syncing please read the guide here https://docs.djangoproject.com/en/3.0/topics/migrations/
+* A standard automated test can be found in /Prince-Bride/weddinglist/test.py, please see the documentation on running automated testing here https://docs.djangoproject.com/en/3.0/topics/testing/overview/
 
 # Prince-Bride: Improvements
 
 These improvements would make the webapp better
 1) NGINX to handle multiple concurrent requests
 2) User authentication
+3) Code documentation
+4) Dockerisation

@@ -6,10 +6,10 @@
         My Wedding List
     </h1>
     <p class="text-sm-left font-weight-light">
-        Create your perfect wedding list right here. Once you are done adding items to your list simply click on the "store list" button.
+        Create your perfect wedding list right here. Once you are done adding items to your list simply click on the "save my list" button.
     </p>
-    <form id="/" action="" method="post">{% csrf_token %}
-        <button type="submit" class="btn btn-success">Store list</button>    
+    <form action="/home/" method="post">{% csrf_token %}
+        <button type="submit" class="btn btn-success">Save my list</button>    
     <br><br>
     <span style="display: none;" id="dummy_row_count">{{ max_count }}</span>
     <table class="table table-striped table-hover">
@@ -22,6 +22,7 @@
                 <th>Quantity</th>
                 <th>Cost</th>
                 <th>Item Code</th>
+                <th>Buy</th>
                 <th>Remove</th>
             </tr>
         </thead>
@@ -43,6 +44,15 @@
     <br>
     <button type="button" class="btn btn-success" onclick="add_item();">Add item</button>
     <button type="button" class="btn btn-primary" onclick="back();">Back</button>
+</div>
+<div style="display: none;">
+    <form id="payment" action="/payment/" method="post">{% csrf_token %}
+      <input id="p_product_id" type="number" name="product_id" value="">
+      <input id="p_product_name" type="text" name="product_name" value="">
+      <input id="p_product_brand" type="text" name="product_brand" value="">
+      <input id="p_price" type="text" name="price" value="">
+      <input id="p_quantity" type="number" name="quantity" value="">
+    </form>
 </div>
 <script>
     var products = [
@@ -227,7 +237,9 @@
             row = row + '<td>'+quantity+'</td><input id="product_qty_ordered_'+row_number+'" style="display: none;" name="product_qty_ordered" value="'+quantity+'">'; // quantity
             row = row + '<td>'+cost+'GBP</td>'; // cost
             row = row + '<td>'+row_contents["id"]+'</td><input id="product_id_'+row_number+'" style="display: none;" name="product_id" value="'+row_contents["id"]+'">'; // id
-            row = row + '<td class="btn" onclick="remove_row('+row_number+');">❌</td>'; // remove
+            row = row + '<td class="hover">💳</td>'; // payment
+            row = row + '<td class="hover" onclick="remove_row('+row_number+');">❌</td>'; // remove
+            row = row + '<input id="product_payment_'+row_number+'" style="display: none;" name="product_payment_status" value="Pending">'; // payment_status
         document.getElementById("dummy_row_count").innerHTML = parseInt(row_number) + 1;
         document.getElementById("rph").innerHTML = row;
         document.getElementById("main").style.display = "block";
@@ -246,6 +258,21 @@
         element.parentNode.removeChild(element);
         var element = document.getElementById("product_id_"+row_number);
         element.parentNode.removeChild(element);
+        var element = document.getElementById("product_payment_"+row_number);
+        element.parentNode.removeChild(element);
+    }
+    function purchase(product_id, product_qty) {
+      for (row in products) {
+        if (products[row]["id"] == product_id) {
+          row_contents = products[row];
+        }
+      }
+      document.getElementById("p_product_id").value = row_contents["id"];
+      document.getElementById("p_product_name").value = row_contents["name"];
+      document.getElementById("p_product_brand").value = row_contents["brand"];
+      document.getElementById("p_price").value = row_contents["price"];
+      document.getElementById("p_quantity").value = product_qty;
+      document.getElementById("payment").submit();
     }
 </script>
 {% endblock %}	

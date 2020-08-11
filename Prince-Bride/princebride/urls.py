@@ -16,8 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from weddinglist.views import home_view
+from weddinglist.views import payment_view
+from weddinglist.views import payment_success_view
 
 urlpatterns = [
     path('', home_view),
+    path('home/', home_view),
+    path('payment/', payment_view),
+    path('payment-success/', payment_success_view),
     path('admin/', admin.site.urls),
 ]
